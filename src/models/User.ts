@@ -7,6 +7,7 @@ export interface IUser extends Document {
    password: string
    avatar: string
    role: Array<string>
+   createdAt: Date
 }
 
 const User: Schema = new Schema({
@@ -31,6 +32,10 @@ const User: Schema = new Schema({
    role: {
       type: Array,
       default: "User"
+   },
+   created: {
+      type: Date,
+      default: new Date()
    }
 }, { timestamps: true })
 

@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import registerRoute from './routes/register'
+import userRoute from './routes/user'
 
 const app = express()
 
@@ -15,7 +16,10 @@ const DB = process.env.DB || ''
 app.use(express.json())
 app.use(cors())
 
+app.use(express.static('public'))
+
 app.use('/api/auth', registerRoute)
+app.use('/api/user', userRoute)
 
 const start = async () => {
    try {
