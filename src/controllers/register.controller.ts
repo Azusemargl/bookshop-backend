@@ -50,6 +50,8 @@ export const loginController = async (req: Request, res: Response) => {
          email: user.email,
          avatar: { photo: user.avatar },
          role: user.role,
+         balance: user.balance,
+         scores: user.scores
       }
 
       return res.json({ ...userData, token })
@@ -75,6 +77,8 @@ export const authController = async (req: Request, res: Response) => {
          email: user.email,
          avatar: { photo: user.avatar },
          role: user.role,
+         balance: user.balance,
+         scores: user.scores,
          createdAt: user.createdAt
       }
 

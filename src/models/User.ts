@@ -7,6 +7,8 @@ export interface IUser extends Document {
    password: string
    avatar: string
    role: Array<string>
+   balance: number
+   scores: number
    createdAt: Date
 }
 
@@ -28,6 +30,14 @@ const User: Schema = new Schema({
    avatar: {
       type: String,
       data: Buffer
+   },
+   balance: {
+      type: Number,
+      default: 0
+   },
+   scores: {
+      type: Number,
+      default: 0
    },
    role: {
       type: Array,

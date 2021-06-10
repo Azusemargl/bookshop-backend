@@ -1,9 +1,15 @@
 import { Router } from 'express'
 import path from 'path'
 import multer from 'multer'
-import { avatarContoller, deleteAvatarContoller } from '../controllers/user.controller'
+import {
+   avatarContoller,
+   deleteAvatarContoller,
+   emailUpdateController,
+   loginUpdateController,
+   passwordUpdateController
+} from '../controllers/user.controller'
 
-// TODO: Create error handler
+// TODO: Create avatar error handler
 
 const router = Router()
 
@@ -32,5 +38,8 @@ const checkFileType = (file: any, cb: any) => {
 
 router.post('/avatar', upload.single('file'), avatarContoller)
 router.put('/avatar/delete', deleteAvatarContoller)
+router.put('/login/update', loginUpdateController)
+router.put('/email/update', emailUpdateController)
+router.put('/password/update', passwordUpdateController)
 
 export default router
