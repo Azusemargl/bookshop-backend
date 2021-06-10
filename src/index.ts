@@ -4,6 +4,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import registerRoute from './routes/register'
 import userRoute from './routes/user'
+import bookRoute from './routes/book'
 
 const app = express()
 
@@ -20,6 +21,7 @@ app.use(express.static('public'))
 
 app.use('/api/auth', registerRoute)
 app.use('/api/user', userRoute)
+app.use('/api/books', bookRoute)
 
 const start = async () => {
    try {

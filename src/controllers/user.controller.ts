@@ -39,7 +39,7 @@ export const deleteAvatarContoller = async (req: Request, res: Response) => {
       await user.save()
 
       fs.unlinkSync(`./public/images/${id}.jpg`)
-      res.status(201).send({ error: "Image deleted" })
+      res.status(200).send({ error: "Image deleted" })
    } catch (e) {
       res.status(500).send({ error: "Error deleting image!" })
    }
