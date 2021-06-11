@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import fs from 'fs'
 import bcrypt from 'bcrypt'
 import User from '../models/User'
+import Book from '../models/Book'
 
 dotenv.config()
 
@@ -21,6 +22,49 @@ export const avatarContoller = async (req: Request, res: Response) => {
       await user.save()
 
       return res.json({ avatar: file.filename })
+   } catch (e) {
+      return res.status(500).json({ error: `Server error: ${e}` })
+   }
+}
+
+// Add favorites books controller
+export const favoritesBooksController = async (req: Request, res: Response) => {
+   try {
+      const { userId, bookId } = req.body
+
+      const user = await User.findById({ _id: userId }).populate('favorites')
+      const book = await Book.findById({ _id: bookId })
+
+      if (!user) return res.status(400).json({ error: 'Пользователь не найден' })
+      if (!book) return res.status(400).json({ error: 'Книга не найдена' })
+      if (user.favorites.some(item => `${item._id}` === bookId)) return res.status(400).json({ error: 'Книга уже добавлена' })
+
+      user.favorites.push(book)
+
+      await user.save()
+
+      return res.json([ ...user.favorites ])
+   } catch (e) {
+      return res.status(500).json({ error: `Server error: ${e}` })
+   }
+}
+
+// Remove favorites books controller
+export const removeFavoritesBooksController = async (req: Request, res: Response) => {
+   try {
+      const { userId, bookId } = req.body
+
+      const user = await User.findById({ _id: userId }).populate('favorites')
+      const book = await Book.findById({ _id: bookId })
+
+      if (!user) return res.status(400).json({ error: 'Пользователь не найден' })
+      if (!book) return res.status(400).json({ error: 'Книга не найдена' })
+
+      const removed = user.favorites.filter(item => `${item._id}` !== bookId)
+      user.favorites = removed
+
+      user.save()
+      return res.json([ ...user.favorites ])
    } catch (e) {
       return res.status(500).json({ error: `Server error: ${e}` })
    }

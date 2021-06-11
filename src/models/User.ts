@@ -1,4 +1,5 @@
 import { Schema, model, Document } from "mongoose"
+import { IBook } from './Book'
 import validator from "validator"
 
 export interface IUser extends Document {
@@ -9,44 +10,20 @@ export interface IUser extends Document {
    role: Array<string>
    balance: number
    scores: number
+   favorites: Array<IBook>
    createdAt: Date
 }
 
 const User: Schema = new Schema({
-   login: {
-      type: String,
-      required: "Обязательное поле",
-   },
-   email: {
-      type: String,
-      require: "Обязательное поле",
-      validate: [validator.isEmail, 'Invalid email'],
-      unique: true,
-   },
-   password: {
-      type: String,
-      required: "Обязательное поле",
-   },
-   avatar: {
-      type: String,
-      data: Buffer
-   },
-   balance: {
-      type: Number,
-      default: 0
-   },
-   scores: {
-      type: Number,
-      default: 0
-   },
-   role: {
-      type: Array,
-      default: "User"
-   },
-   created: {
-      type: Date,
-      default: new Date()
-   }
+   login: { type: String, required: "Обязательное поле" },
+   email: { type: String, require: "Обязательное поле", validate: [validator.isEmail, 'Invalid email'], unique: true },
+   password: { type: String, required: "Обязательное поле" },
+   avatar: { type: String, data: Buffer },
+   balance: { type: Number, default: 0 },
+   scores: { type: Number, default: 0 },
+   role: { type: Array, default: "User" },
+   favorites: [{ type: String, ref: "Book" }],
+   created: { type: Date, default: new Date() }
 }, { timestamps: true })
 
 const UserSchema = model<IUser>('User', User)

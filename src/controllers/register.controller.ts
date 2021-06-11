@@ -50,6 +50,7 @@ export const loginController = async (req: Request, res: Response) => {
          email: user.email,
          avatar: { photo: user.avatar },
          role: user.role,
+         favorites: user.favorites,
          balance: user.balance,
          scores: user.scores
       }
@@ -67,6 +68,7 @@ export const authController = async (req: Request, res: Response) => {
       
       const userId = await jwt.verify(token, `${process.env.SECRET_KEY}`, (err: any, decoded: any) => decoded.user)
       const user = await User.findById(userId)
+      const userFavorites = await User.findById(userId).populate('favorites')
       
       if (!user) return res.json({ error: 'Ошибка аутентификации' })
 
@@ -77,6 +79,7 @@ export const authController = async (req: Request, res: Response) => {
          email: user.email,
          avatar: { photo: user.avatar },
          role: user.role,
+         favorites: userFavorites?.favorites,
          balance: user.balance,
          scores: user.scores,
          createdAt: user.createdAt

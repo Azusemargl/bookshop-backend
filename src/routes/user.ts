@@ -5,8 +5,10 @@ import {
    avatarContoller,
    deleteAvatarContoller,
    emailUpdateController,
+   favoritesBooksController,
    loginUpdateController,
-   passwordUpdateController
+   passwordUpdateController,
+   removeFavoritesBooksController
 } from '../controllers/user.controller'
 
 // TODO: Create avatar error handler
@@ -38,6 +40,8 @@ const checkFileType = (file: any, cb: any) => {
 
 router.post('/avatar', upload.single('file'), avatarContoller)
 router.put('/avatar/delete', deleteAvatarContoller)
+router.post('/favorites/set', favoritesBooksController)
+router.put('/favorites/remove', removeFavoritesBooksController)
 router.put('/login/update', loginUpdateController)
 router.put('/email/update', emailUpdateController)
 router.put('/password/update', passwordUpdateController)
