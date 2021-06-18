@@ -5,6 +5,8 @@ import bcrypt from 'bcrypt'
 import User from '../models/User'
 import Book from '../models/Book'
 
+// TODO: Correct looking for the same login name during changing user login
+
 dotenv.config()
 
 // Add user avatar controller
@@ -94,14 +96,13 @@ export const loginUpdateController = async (req: Request, res: Response) => {
    try {
       const { id, login } = req.body
       const user = await User.findById(id)
-
+      
       if (!user) return res.status(400).json({ error: 'Пользователь не найден' })
-
       user.login = login
 
       await user.save()
 
-      res.json({ login: login, message: "Логин изменен" })
+      res.json({ login, message: "Логин изменен" })
    } catch (e) {
       return res.status(500).json({ error: `Server error: ${e}` })
    }
@@ -114,7 +115,6 @@ export const emailUpdateController = async (req: Request, res: Response) => {
       const user = await User.findById(id)
 
       if (!user) return res.status(400).json({ error: 'Пользователь не найден' })
-
       user.email = email
 
       await user.save()

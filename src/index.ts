@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 import registerRoute from './routes/register'
 import userRoute from './routes/user'
 import bookRoute from './routes/book'
+import cartRoute from './routes/cart'
 
 const app = express()
 
@@ -22,6 +23,7 @@ app.use(express.static('public'))
 app.use('/api/auth', registerRoute)
 app.use('/api/user', userRoute)
 app.use('/api/books', bookRoute)
+app.use('/api/cart', cartRoute)
 
 const start = async () => {
    try {

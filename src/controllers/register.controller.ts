@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import dotenv from 'dotenv'
 import User from '../models/User'
+import Cart from '../models/Cart'
 
 dotenv.config()
 
@@ -18,7 +19,12 @@ export const registerContoller = async (req: Request, res: Response) => {
 
       const hashPassword = await bcrypt.hash(password, 7)
       const user = new User({ login, email, password: hashPassword })
+      await user.save()
 
+      const cart = new Cart({ user: user._id })
+      user.cart = cart
+      
+      await cart.save()
       await user.save()
 
       return res.json({ success: 'Пользователь создан' })
@@ -51,8 +57,9 @@ export const loginController = async (req: Request, res: Response) => {
          avatar: { photo: user.avatar },
          role: user.role,
          favorites: user.favorites,
+         cart: user.cart._id,
          balance: user.balance,
-         scores: user.scores
+         scores: user.scores,
       }
 
       return res.json({ ...userData, token })
@@ -80,6 +87,7 @@ export const authController = async (req: Request, res: Response) => {
          avatar: { photo: user.avatar },
          role: user.role,
          favorites: userFavorites?.favorites,
+         cart: user.cart._id,
          balance: user.balance,
          scores: user.scores,
          createdAt: user.createdAt
