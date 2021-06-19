@@ -88,3 +88,23 @@ export const removeCartItemController = async (req: Request, res: Response) => {
       return res.json({ error: `Server error: ${e}` })
    }
 }
+
+// Change cart item counter controller
+export const changeCounterCartItemController = async (req: Request, res: Response) => {
+   try {
+      const { itemId, count } = req.body
+
+      const item = await CartProduct.findById(itemId)
+
+      if (!item) return res.status(500).json({ error: 'Неккоректные данные' })
+
+      item.count = count
+      await item.save()
+
+      await item.save()
+
+      return res.json({ id: itemId, count: item.count })
+   } catch (e) {
+      return res.json({ error: `Server error: ${e}` })
+   }
+}
