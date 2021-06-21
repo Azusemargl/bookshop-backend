@@ -18,13 +18,17 @@ export const getBookContoller = async (req: Request, res: Response) => {
 // book creator controller
 export const bookContoller = async (req: Request, res: Response) => {
    try {
-      const { name, image, author, stars, review, price, past_price, category, year_of_issue, date, sales, } = req.body
+      const {
+         name, image, author, publisher, stars, review, price,
+         past_price, category, number_of_pages, year_of_issue,
+         cover_type, age_restrictions, description, date, sales
+      } = req.body
 
       const book = new Book({
-         name, image, author, stars,
-         review, price, past_price,
-         category, year_of_issue,
-         date, sales
+         name, image, author, publisher, stars,
+         review, price, past_price, category,
+         number_of_pages, year_of_issue, cover_type,
+         age_restrictions, description, date, sales
       })
 
       await book.save()
