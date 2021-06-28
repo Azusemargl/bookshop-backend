@@ -1,6 +1,7 @@
 import { Schema, model, Document, Types } from "mongoose"
 import { IBook } from './Book'
 import { ICart } from "./Cart"
+import { IOrder } from "./Order"
 import validator from "validator"
 
 export interface IUser extends Document {
@@ -13,6 +14,7 @@ export interface IUser extends Document {
    scores: number
    favorites: Array<IBook>
    cart: ICart
+   orders: Array<IOrder>
    createdAt: Date
 }
 
@@ -26,6 +28,7 @@ const User: Schema = new Schema({
    role: { type: Array, default: "User" },
    favorites: [{ type: Types.ObjectId, ref: "Book" }],
    cart: { type: Types.ObjectId, ref: "Cart" },
+   orders: [{ type: Types.ObjectId, ref: "Order" }],
    created: { type: Date, default: new Date() }
 }, { timestamps: true })
 
