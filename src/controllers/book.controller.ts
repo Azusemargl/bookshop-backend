@@ -9,7 +9,27 @@ export const getBookContoller = async (req: Request, res: Response) => {
    try {
       const books = await Book.find()
 
-      return res.json([ ...books ])
+      return res.json([...books])
+   } catch (e) {
+      return res.json({ error: `Server error: ${e}` })
+   }
+}
+
+// Get the filtered books
+export const getFilteredBookContoller = async (req: Request, res: Response) => {
+   try {
+      const { authors, genres } = req.body.filter
+
+      const genresBook = Object.entries(req.body.filter).some(item => item[1])
+      ? await Book.find({
+         $or: [
+            {'category': { $in: genres && genres.split(',') }},
+            {'author': { $in: authors && authors.split(',') }}
+         ]
+      }, (_, data) => data)
+      : await Book.find({})
+      
+      return res.json([...genresBook])
    } catch (e) {
       return res.json({ error: `Server error: ${e}` })
    }
