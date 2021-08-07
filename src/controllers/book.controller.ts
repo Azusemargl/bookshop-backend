@@ -15,27 +15,27 @@ export const getBookContoller = async (req: Request, res: Response) => {
    }
 }
 
-// Get the filtered books
+// Get filtered books
 export const getFilteredBookContoller = async (req: Request, res: Response) => {
    try {
       const { authors, genres } = req.body.filter
 
       const genresBook = Object.entries(req.body.filter).some(item => item[1])
-      ? await Book.find({
-         $or: [
-            {'category': { $in: genres && genres.split(',') }},
-            {'author': { $in: authors && authors.split(',') }}
-         ]
-      }, (_, data) => data)
-      : await Book.find({})
-      
+         ? await Book.find({
+            $and: [
+               genres ? { 'category': { $in: genres.split(',') } } : {},
+               authors ? { 'author': { $in: authors.split(',') } } : {},
+            ]
+         }, (_, data) => data)
+         : await Book.find({})
+
       return res.json([...genresBook])
    } catch (e) {
       return res.json({ error: `Server error: ${e}` })
    }
 }
 
-// book creator controller
+// Book creator controller
 export const bookContoller = async (req: Request, res: Response) => {
    try {
       const {
@@ -57,4 +57,11 @@ export const bookContoller = async (req: Request, res: Response) => {
    } catch (e) {
       return res.json({ error: `Server error: ${e}` })
    }
+}
+
+
+// Types
+type Query = {
+   authors?: { $in: any; }
+   genres?: { $in: any; }
 }
