@@ -1,7 +1,12 @@
 import { Router } from 'express'
 import path from 'path'
 import multer from 'multer'
-import { getBookContoller, bookContoller, getFilteredBookContoller } from '../controllers/book.controller'
+import {
+   getBookContoller,
+   bookContoller,
+   getFilteredBookContoller,
+   getBooksbySearchContoller 
+} from '../controllers/book.controller'
 
 const router = Router()
 
@@ -30,6 +35,7 @@ const checkFileType = (file: any, cb: any) => {
 
 router.get('/all', getBookContoller)
 router.post('/filtered', getFilteredBookContoller)
+router.post('/search', getBooksbySearchContoller)
 router.post('/create', bookContoller)
 
 export default router
