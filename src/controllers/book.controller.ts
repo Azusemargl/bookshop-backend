@@ -41,31 +41,10 @@ export const getFilteredBookContoller = async (req: Request, res: Response) => {
 export const getBooksbySearchContoller = async (req: Request, res: Response) => {
    try {
       const { value } = req.body.filter
-
-      // const genresBook = Object.entries(req.body.filter).some(item => item[1])
-      //    ? await Book.find({
-      //       $and: [
-      //          genres   ? { 'category': { $in: genres.split(',')   } } : {},
-      //          authors  ? { 'author':   { $in: authors.split(',')  } } : {},
-      //          minPrice ? { 'price': { $gte: minPrice } } : {},
-      //          maxPrice ? { 'price': { $lte: maxPrice } } : {},
-      //       ]
-      //    }, (_, data) => data)
-      //    : await Book.find({})
-
-      // const books = await Book.find({
-      //    $or: [
-      //       { 'name'  : { $in: [value] } },
-      //       { 'author': { $in: [value] } },
-      //    ]
-      // })
       const books = await Book.find({})
       const result = books.filter(item => {
          return (item.name?.toLowerCase().includes(value) ||item.author?.toLowerCase().includes(value))
       })
-      // const result = [
-      //    nameBooks.length ? {  }
-      // ]
 
       return res.json([...result].sort())
    } catch (e) {

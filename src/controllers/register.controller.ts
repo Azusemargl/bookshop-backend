@@ -4,6 +4,8 @@ import bcrypt from 'bcrypt'
 import dotenv from 'dotenv'
 import User from '../models/User'
 import Cart from '../models/Cart'
+import Order from '../models/Order'
+import Books from '../models/Book'
 
 dotenv.config()
 
@@ -11,7 +13,7 @@ dotenv.config()
 export const registerContoller = async (req: Request, res: Response) => {
    try {
       const { login, email, password } = req.body
-      
+
       const candidateByLogin = await User.findOne({ login })
       const candidateByEmail = await User.findOne({ email })
 
@@ -23,12 +25,12 @@ export const registerContoller = async (req: Request, res: Response) => {
 
       const cart = new Cart({ user: user._id })
       user.cart = cart
-      
+
       await cart.save()
       await user.save()
 
       return res.json({ success: 'Пользователь создан' })
-   } catch(e) {
+   } catch (e) {
       return res.json({ error: `Server error: ${e}` })
    }
 }
@@ -50,9 +52,11 @@ export const loginController = async (req: Request, res: Response) => {
          { expiresIn: '24h' }
       )
 
+      const order = await Order.findById(user?.orders)
+
       const userData = {
-         id:    user._id,
-         login:  user.login,
+         id: user._id,
+         login: user.login,
          email: user.email,
          avatar: { photo: user.avatar },
          role: user.role,
@@ -60,10 +64,11 @@ export const loginController = async (req: Request, res: Response) => {
          cart: user.cart._id,
          balance: user.balance,
          scores: user.scores,
+         orders: [order],
       }
 
       return res.json({ ...userData, token })
-   } catch(e) {
+   } catch (e) {
       return res.json({ error: `Server error: ${e}` })
    }
 }
@@ -72,17 +77,18 @@ export const loginController = async (req: Request, res: Response) => {
 export const authController = async (req: Request, res: Response) => {
    try {
       const { token } = req.body
-      
+
       const userId = await jwt.verify(token, `${process.env.SECRET_KEY}`, (err: any, decoded: any) => decoded.user)
       const user = await User.findById(userId)
+      const order = await Order.findById(user?.orders)
       const userFavorites = await User.findById(userId).populate('favorites')
       
       if (!user) return res.json({ error: 'Ошибка аутентификации' })
 
       const userData = {
-         auth:  true,
-         id:    user._id,
-         login:  user.login,
+         auth: true,
+         id: user._id,
+         login: user.login,
          email: user.email,
          avatar: { photo: user.avatar },
          role: user.role,
@@ -90,11 +96,12 @@ export const authController = async (req: Request, res: Response) => {
          cart: user.cart._id,
          balance: user.balance,
          scores: user.scores,
-         createdAt: user.createdAt
+         createdAt: user.createdAt,
+         orders: [order],
       }
 
       return res.json({ ...userData })
-   } catch(e) {
+   } catch (e) {
       return res.json({ error: `Server error: ${e}` })
    }
 }

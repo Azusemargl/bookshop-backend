@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
 import dotenv from 'dotenv'
 import Book from '../models/Book'
-import User from '../models/User'
 import Cart from '../models/Cart'
 import CartProduct from '../models/CartProducts'
 

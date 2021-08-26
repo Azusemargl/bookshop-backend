@@ -1,11 +1,12 @@
 import { Request, Response } from 'express'
 import dotenv from 'dotenv'
-import Book from '../models/Book'
 import User from '../models/User'
 import Order from '../models/Order'
 import CartProducts from '../models/CartProducts'
 
 dotenv.config()
+
+// TODO: Fix the unique order email
 
 // Create a new order Controller
 export const createOrderController = async (req: Request, res: Response) => {
@@ -21,23 +22,24 @@ export const createOrderController = async (req: Request, res: Response) => {
       const newOrder = new Order({
          books: [...cartProducts],
          userId: userId,
-         name: name,
          price: price,
+         name: name,
          email: email,
          city: city,
          address: address,
          completed: completed
       })
-
-      const orders = user.orders
-
-      user.orders = [...orders, newOrder]
-
+      console.log(newOrder);
+      
       await newOrder.save()
+
+      user.orders = [...user.orders, newOrder]
       await user.save()
 
-      return res.json({ newOrder })
+      return res.json([ ...user.orders, newOrder ])
    } catch (e) {
+      console.log(e);
+      
       return res.json({ error: `Server error: ${e}` })
    }
 }
